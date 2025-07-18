@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Records</title>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Health Records</h1>
+        <form id="healthRecordForm" onsubmit="addHealthRecord(event)">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required><br>
+
+            <label for="symptoms">Symptoms:</label><br>
+            <textarea id="symptoms" name="symptoms" rows="4" cols="50" placeholder="Enter symptoms"></textarea><br>
+
+            <label for="diagnosis">Diagnosis:</label><br>
+            <textarea id="diagnosis" name="diagnosis" rows="4" cols="50" placeholder="Enter diagnosis"></textarea><br>
+
+            <label for="treatment">Treatment:</label><br>
+            <textarea id="treatment" name="treatment" rows="4" cols="50" placeholder="Enter treatment"></textarea><br>
+
+            <button type="submit" >Add Health Record</button>
+        </form>
+
+        <div id="healthRecords">
+            <!-- Health records will be displayed here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    text-align: center;
+}
+
+textarea, input[type="date"], button {
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+    width: calc(100% - 20px);
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#healthRecords {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+</style>
+</html>

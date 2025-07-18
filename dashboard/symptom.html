@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symptom Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #555;
+    }
+    input[type="text"], select, input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #e7f3fe;
+      border: 1px solid #b3d4fc;
+      border-radius: 4px;
+      color: #31708f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Symptom Checker</h1>
+    <form id="symptomForm">
+      <label for="age">Age:</label>
+      <input type="text" id="age" name="age" required>
+      
+      <label for="gender">Gender:</label>
+      <select id="gender" name="gender" required>
+        <option value="">Select</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+      
+      <label for="symptoms">Symptoms (comma separated):</label>
+      <input type="text" id="symptoms" name="symptoms" required>
+      
+      <label for="bodyTemperature">Body Temperature (°F):</label>
+      <input type="number" id="bodyTemperature" name="bodyTemperature" step="0.1">
+      
+      <button type="submit">Check Symptoms</button>
+    </form>
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    document.getElementById('symptomForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      var age = document.getElementById('age').value;
+      var gender = document.getElementById('gender').value;
+      var symptoms = document.getElementById('symptoms').value.toLowerCase().split(',');
+      var bodyTemperature = parseFloat(document.getElementById('bodyTemperature').value);
+      var diagnosis = [];
+      symptoms = symptoms.map(symptom => symptom.trim());
+
+      if (bodyTemperature && bodyTemperature > 100.4) {
+        symptoms.push('fever');
+      }
+
+      if (symptoms.includes('fever')) {
+        if (symptoms.includes('cough') && symptoms.includes('shortness of breath')) {
+          diagnosis.push('Possible COVID-19. Consider getting tested and seek medical advice.');
+        } else if (symptoms.includes('body ache') || symptoms.includes('fatigue')) {
+          diagnosis.push('You might have the flu. Rest and stay hydrated.');
+        } else {
+          diagnosis.push('General fever. It could be a sign of an infection. Monitor your symptoms.');
+        }
+      }
+
+      if (symptoms.includes('headache')) {
+        if (symptoms.includes('nausea') || symptoms.includes('sensitivity to light')) {
+          diagnosis.push('You might have a migraine. Consider resting in a dark, quiet room.');
+        } else if (symptoms.includes('fever')) {
+          diagnosis.push('Possible meningitis. Seek medical attention immediately.');
+        } else {
+          diagnosis.push('General headache. Stay hydrated and rest.');
+        }
+      }
+
+      if (symptoms.includes('stomach pain')) {
+        if (symptoms.includes('diarrhea') || symptoms.includes('vomiting')) {
+          diagnosis.push('You might have a stomach infection or food poisoning. Stay hydrated.');
+        } else if (symptoms.includes('bloating')) {
+          diagnosis.push('Possible indigestion. Monitor your diet and symptoms.');
+        } else {
+          diagnosis.push('General stomach pain. If it persists, consult a healthcare professional.');
+        }
+      }
+      if (symptoms.includes('chest pain')) {
+        if (symptoms.includes('shortness of breath') || symptoms.includes('pain in arm')) {
+          diagnosis.push('Possible heart attack. Seek emergency medical assistance immediately.');
+        } else if (symptoms.includes('cough')) {
+          diagnosis.push('Possible respiratory issue. Consult a doctor if symptoms persist.');
+        } else {
+          diagnosis.push('General chest pain. It could be a sign of various conditions. Monitor closely.');
+        }
+      }
+
+      if (symptoms.includes('nausea')) {
+        if (symptoms.includes('vomiting') || symptoms.includes('diarrhea')) {
+          diagnosis.push('You might have a stomach infection or food poisoning. Stay hydrated.');
+        } else if (symptoms.includes('dizziness')) {
+          diagnosis.push('Possible motion sickness or vertigo. Rest and stay hydrated.');
+        } else {
+          diagnosis.push('General nausea. It could be due to various reasons. Monitor your symptoms.');
+        }
+      }
+
+      if (symptoms.includes('knee pain')) {
+        if (symptoms.includes('swelling') || symptoms.includes('stiffness')) {
+          diagnosis.push('Possible arthritis or injury. Rest and consider seeing a healthcare professional.');
+        } else if (symptoms.includes('redness')) {
+          diagnosis.push('Possible infection or inflammation. Seek medical advice.');
+        } else {
+          diagnosis.push('General knee pain. It could be due to various reasons. Monitor your symptoms.');
+        }
+      }
+
+      if (symptoms.includes('rash')) {
+        if (symptoms.includes('itching') || symptoms.includes('redness')) {
+          diagnosis.push('Possible allergic reaction or skin infection. Consider seeing a dermatologist.');
+        } else if (symptoms.includes('fever')) {
+          diagnosis.push('Possible infection or systemic illness. Seek medical attention.');
+        } else {
+          diagnosis.push('General rash. It could be due to various reasons. Monitor your symptoms.');
+        }
+      }
+
+      if (diagnosis.length === 0) {
+        diagnosis.push('Your symptoms are unclear. It is best to consult with a healthcare professional for an accurate diagnosis.');
+      }
+
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('result').innerHTML = diagnosis.join('<br>');
+    });
+  </script>
+</body>
+</html>

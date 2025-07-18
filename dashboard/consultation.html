@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Clock</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="clock" id="clock"></div>
+  <section>
+  <div id="login">
+    <input type="text" id="username" placeholder="Enter your name">
+    <input type="text" id="room" placeholder="Enter room name">
+    <button id="joinRoom">Join Room</button>
+</div>
+<div id="chat" class="hidden">
+    <div id="chatHeader">
+        <span id="roomName"></span>
+        <button id="leaveRoom">Leave Chat</button>
+    </div>
+    <div id="messages"></div>
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Enter your message">
+        <button type="submit">Send</button>
+    </form>
+</div>
+</section>
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+  <script>
+    function updateClock() {
+      var now = new Date();
+      var hours = now.getHours().toString().padStart(2, '0');
+      var minutes = now.getMinutes().toString().padStart(2, '0');
+      var seconds = now.getSeconds().toString().padStart(2, '0');
+      var timeString = hours + ':' + minutes + ':' + seconds;
+      document.getElementById('clock').textContent = timeString;
+    }
+
+    // Update the clock every second
+    setInterval(updateClock, 1000);
+
+    // Initial call to display time immediately
+    updateClock();
+  </script>
+</body>
+</html>

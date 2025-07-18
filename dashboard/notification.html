@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - Health Assistant</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      background-color: #fafafa;
+      border-bottom: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      position: relative;
+      transition: transform 0.2s;
+    }
+    li:hover {
+      transform: translateY(-3px);
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+    li::before {
+      content: "\1F4E2";
+      font-size: 20px;
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+    }
+    li span {
+      display: block;
+      margin-left: 40px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Notifications</h1>
+    <ul id="notificationList">
+      <!-- Notifications will be dynamically added here -->
+    </ul>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const notificationList = document.getElementById('notificationList');
+      const reminders = JSON.parse(localStorage.getItem('reminders')) || {};
+      const doctorAppointments = JSON.parse(localStorage.getItem('doctorAppointments')) || [];
+      const workoutDays = JSON.parse(localStorage.getItem('workoutDays')) || [];
+      const medicationReminders = JSON.parse(localStorage.getItem('medicationReminders')) || [];
+      const dietTips = JSON.parse(localStorage.getItem('dietTips')) || [];
+
+      function addNotification(type, message) {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${message}</span>`;
+        notificationList.appendChild(li);
+      }
+
+      // Add calendar reminders
+      for (const [date, reminder] of Object.entries(reminders)) {
+        addNotification('reminder', `Reminder for ${date}: ${reminder}`);
+      }
+
+      // Add doctor appointments
+      doctorAppointments.forEach(appointment => {
+        addNotification('appointment', `Doctor Appointment with Dr. ${appointment.doctor} on ${appointment.date} at ${appointment.time}`);
+      });
+
+      // Add workout days
+      workoutDays.forEach(workout => {
+        addNotification('workout', `Workout: ${workout.activity} on ${workout.date} at ${workout.time}`);
+      });
+
+      // Add medication reminders
+      medicationReminders.forEach(medication => {
+        addNotification('medication', `Medication Reminder: Take ${medication.name} on ${medication.date} at ${medication.time}`);
+      });
+
+      // Add diet tips
+      dietTips.forEach(tip => {
+        addNotification('diet', `Diet Tip: ${tip.message} on ${tip.date}`);
+      });
+    });
+  </script>
+</body>
+</html>

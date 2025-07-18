@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Calendar with Month Name</title>
+  <style>
+    /* General styles for the calendar */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    .calendar {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .calendar th {
+      background-color: #f2f2f2;
+      border: 1px solid #dddddd;
+      text-align: center;
+      padding: 10px;
+    }
+    .calendar td {
+      border: 1px solid #dddddd;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .calendar td:hover {
+      background-color: #f5f5f5;
+    }
+    .calendar .today {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .calendar .prev-month, .calendar .next-month {
+      color: #ccc;
+    }
+    .month-name {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+    .navigation-btn {
+      display: block;
+      width: 150px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .navigation-btn:hover {
+      background-color: #0056b3;
+    }
+    .reminder {
+      background-color: #ffeb3b;
+      border-radius: 5px;
+      padding: 5px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+  
+<body>
+  <h2 class="month-name">Month Name</h2>
+  <table id="calendar" class="calendar">
+    <thead>
+      <tr>
+        <th>Sun</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+      </tr>
+    </thead>
+    <tbody id="calendar-body">
+      <!-- Calendar content will be generated dynamically -->
+    </tbody>
+  </table>
+
+  <a href="#" class="navigation-btn" id="prevMonthBtn">Previous Month</a>
+  <a href="#" class="navigation-btn" id="nextMonthBtn">Next Month</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var today = new Date();
+      var currentMonth = today.getMonth();
+      var currentYear = today.getFullYear();
+      var reminders = JSON.parse(localStorage.getItem('reminders')) || {};
+
+      function generateCalendar(year, month) {
+        var startDate = new Date(year, month, 1);
+        var endDate = new Date(year, month + 1, 0);
+        var firstDay = startDate.getDay();
+        var lastDate = endDate.getDate();
+
+        var calendarBody = document.getElementById('calendar-body');
+        calendarBody.innerHTML = '';
+
+        var date = 1;
+        for (var i = 0; i < 6; i++) {
+          var row = document.createElement('tr');
+
+          for (var j = 0; j < 7; j++) {
+            if (i === 0 && j < firstDay) {
+              var cell = document.createElement('td');
+              var prevMonthDate = new Date(year, month, -firstDay + j + 1);
+              cell.textContent = prevMonthDate.getDate();
+              cell.classList.add('prev-month');
+              row.appendChild(cell);
+            } else if (date > lastDate) {
+              break;
+            } else {
+              var cell = document.createElement('td');
+              cell.textContent = date;
+              cell.dataset.date = `${year}-${month + 1}-${date}`;
+
+              if (reminders[cell.dataset.date]) {
+                var reminderDiv = document.createElement('div');
+                reminderDiv.classList.add('reminder');
+                reminderDiv.textContent = reminders[cell.dataset.date];
+                cell.appendChild(reminderDiv);
+              }
+
+              if (year === today.getFullYear() && month === today.getMonth() && date === today.getDate()) {
+                cell.classList.add('today');
+              }
+
+              cell.addEventListener('click', function() {
+                var reminder = prompt('Enter a reminder:');
+                if (reminder) {
+                  reminders[this.dataset.date] = reminder;
+                  localStorage.setItem('reminders', JSON.stringify(reminders));
+                  generateCalendar(currentYear, currentMonth);
+                }
+              });
+
+              row.appendChild(cell);
+              date++;
+            }
+          }
+
+          calendarBody.appendChild(row);
+        }
+
+        // Update month name
+        var monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        var monthNameElement = document.querySelector('.month-name');
+        monthNameElement.textContent = monthNames[month] + ' ' + year;
+      }
+
+      generateCalendar(currentYear, currentMonth);
+
+      // Navigation buttons
+      document.getElementById('prevMonthBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        currentMonth--;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        generateCalendar(currentYear, currentMonth);
+      });
+
+      document.getElementById('nextMonthBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        currentMonth++;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        generateCalendar(currentYear, currentMonth);
+      });
+    });
+  </script>
+</body>
+</html>
